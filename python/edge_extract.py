@@ -55,18 +55,24 @@ def get_contours(binary_img, mod = "sobel"):
 		kernal_y = np.array([[-1, -2, -1],
 						    [0, 0, 0],
 						    [1, 2, 1]])
-
+		res_tmp = res_img.copy()
 		for i in range(1, height+1):
 			for j in range(1, width+1):
 				for k in [-1, 0, 1]:
 					for l in [-1, 0, 1]:
 						res_img[i-1][j-1] += tmp_img[i+k][j+l] * \
 											kernal_x[1+k][1+l]
+						res_tmp[i-1][j-1] += tmp_img[i+k][j+l] * \
+											kernal_y[1+k][1+l]
 				if res_img[i-1][j-1] >= 100 or res_img[i-1][j-1] <= -100:
 					res_img[i-1][j-1] = 255
 				else:
 					res_img[i-1][j-1] = 0
-		return res_img
+				if res_tmp[i-1][j-1] >= 100 or res_tmp[i-1][j-1] <= -100:
+					res_tmp[i-1][j-1] = 255
+				else:
+					res_tmp[i-1][j-1] = 0
+		return res_img + res_tmp
 
 	elif "laplacian" == mod:
 		kernal = np.array([[-1, -1, -1],
@@ -82,13 +88,14 @@ def get_contours(binary_img, mod = "sobel"):
 					res_img[i-1][j-1] = 255
 				else:
 					res_img[i-1][j-1] = 0
+
 		return res_img
 
 def main():
 	path = "211.jpg"
 	img = np.array(Image.open(path).convert("L"))
 	binary_im = change_to_binary(img, 125, 255)
-	res_img = get_contours(binary_im, "laplacian")
+	res_img = get_contours(binary_im, "sobel")
 	res_img = Image.fromarray(res_img)
 	plt.imshow(res_img)
 	plt.show()
