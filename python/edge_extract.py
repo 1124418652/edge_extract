@@ -34,7 +34,7 @@ def change_to_binary(img, thresold, value, mod = "normal"):
 					binary_img[i][j] = 0
 	return binary_img
 
-def get_contours(binary_img, mod = "sobel"):
+def get_contours(binary_img, thresold = 100, mod = "sobel"):
 	height = binary_img.shape[0]
 	width = binary_img.shape[1]
 	tmp_img = np.zeros((height+2, width+2))
@@ -64,11 +64,11 @@ def get_contours(binary_img, mod = "sobel"):
 											kernal_x[1+k][1+l]
 						res_tmp[i-1][j-1] += tmp_img[i+k][j+l] * \
 											kernal_y[1+k][1+l]
-				if res_img[i-1][j-1] >= 100 or res_img[i-1][j-1] <= -100:
+				if res_img[i-1][j-1] >= thresold or res_img[i-1][j-1] <= -thresold:
 					res_img[i-1][j-1] = 255
 				else:
 					res_img[i-1][j-1] = 0
-				if res_tmp[i-1][j-1] >= 100 or res_tmp[i-1][j-1] <= -100:
+				if res_tmp[i-1][j-1] >= thresold or res_tmp[i-1][j-1] <= -thresold:
 					res_tmp[i-1][j-1] = 255
 				else:
 					res_tmp[i-1][j-1] = 0
@@ -95,7 +95,7 @@ def main():
 	path = "211.jpg"
 	img = np.array(Image.open(path).convert("L"))
 	binary_im = change_to_binary(img, 125, 255)
-	res_img = get_contours(binary_im, "sobel")
+	res_img = get_contours(binary_im, 100, "sobel")
 	res_img = Image.fromarray(res_img)
 	plt.imshow(res_img)
 	plt.show()
