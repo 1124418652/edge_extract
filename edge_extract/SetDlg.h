@@ -1,5 +1,6 @@
 #pragma once
-
+#include "opencv2/opencv.hpp"
+using namespace cv;
 
 // CSetDlg 对话框
 
@@ -20,4 +21,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
+public:
+	int m_edit_otsu;
+	Mat img;
+	afx_msg void OnBnClickedButton1();
 };
